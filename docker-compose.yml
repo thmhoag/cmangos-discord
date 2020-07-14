@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  cmangos-discord:
+    build: .
+    image: thmhoag/cmangos-discord:latest
+    environment: 
+      - TOKEN=${DISCORD_TOKEN}
+      - MANGOS_USER=${MANGOS_USER:-administrator}
+      - MANGOS_PASS=${MANGOS_PASS:-administrator}
+      - MANGOS_ADDRESS=${MANGOS_ADDRESS:-http://127.0.0.1:7878}
+    restart: always
