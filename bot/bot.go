@@ -96,7 +96,7 @@ func fileExists(filename string) bool {
 	return !info.IsDir()
 }
 
-func createMangosClient() *cmangos.SoapClient {
+func createMangosClient() cmangos.SoapClient {
 	mangosUser := os.Getenv("MANGOS_USER")
 	mangosPass := os.Getenv("MANGOS_PASS")
 	mangosAddress := os.Getenv("MANGOS_ADDRESS")

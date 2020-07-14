@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/thmhoag/cmangos-discord/bot"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,7 +13,7 @@ func main() {
 		sc := make(chan os.Signal, 1)
 		signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 		<-sc
-		fmt.Println("exiting")
+		log.Println("exiting")
 		os.Exit(0)
 	}()
 

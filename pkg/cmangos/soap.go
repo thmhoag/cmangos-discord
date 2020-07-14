@@ -21,9 +21,13 @@ type SoapClientOpts struct {
 	Address		string
 }
 
-type SoapClient struct {
+type soapClient struct {
 	authHeader	string
 	address		string
+}
+
+type SoapClient interface {
+	SendExecCmd(*ExecCmdRequest) (*ExecCmdResponse, error)
 }
 
 // Validate ensures that the client has all parameters filled for connecting
@@ -44,18 +48,18 @@ func (c *SoapClientOpts) Validate() error {
 	return nil
 }
 
-func NewClient(opts *SoapClientOpts) (*SoapClient, error) {
+func NewClient(opts *SoapClientOpts) (SoapClient, error) {
 	if err := opts.Validate(); err != nil {
 		return nil, err
 	}
 
-	return &SoapClient{
+	return &soapClient{
 		authHeader: "Basic " + basicAuth(opts.Username, opts.Password),
 		address: opts.Address,
 	}, nil
 }
 
-func (c *SoapClient) SendExecCmd(req *ExecCmdRequest) (*ExecCmdResponse, error) {
+func (c *soapClient) SendExecCmd(req *ExecCmdRequest) (*ExecCmdResponse, error) {
 
 	template, err := template.New("InputRequest").Parse(execCmdTemplate)
 	if err != nil {
