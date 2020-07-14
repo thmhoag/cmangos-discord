@@ -16,7 +16,7 @@ func NewRegisterCmd(ctx Ctx) *dgmux.Command {
 
 	cmd := &dgmux.Command{
 		Name: 			"register",
-		Description: 	"Registers a new PTR account if non exists for your user",
+		Description: 	"Registers a new account if non exists for your user",
 		Usage:       	"register",
 		IgnoreCase: true,
 		DmOnly: true,
