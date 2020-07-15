@@ -6,6 +6,7 @@ import (
 	"github.com/thmhoag/cmangos-discord/pkg/dgmux"
 	"log"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 )
@@ -17,9 +18,43 @@ func NewRegisterCmd(ctx Ctx) *dgmux.Command {
 	cmd := &dgmux.Command{
 		Name: 			"register",
 		Description: 	"Registers a new account for your discord user",
-		IgnoreCase: true,
-		DmOnly: true,
-		Handler: func(ctx *dgmux.Ctx) {
+		IgnoreCase: 	true,
+		DmOnly: 		true,
+		Handler: 		func(ctx *dgmux.Ctx) {
+			if ctx.Event.GuildID == "" {
+				ctx.ReplyDm("You may not register in a DM.")
+				return
+			}
+
+			allowedRole := os.Getenv("REGISTER_CMD_ROLE")
+			if allowedRole != "" {
+				if ctx.Event.Member == nil || ctx.Event.Member.Roles == nil {
+					ctx.ReplyDm("Unable to register users at this time.")
+					log.Println("Unable to get discord member roles.")
+					return
+				}
+
+				guildRoles, _ := ctx.Session.GuildRoles(ctx.Event.GuildID)
+				guildRoleId := ""
+				for _,role := range guildRoles {
+					if strings.ToLower(role.Name) == strings.ToLower(allowedRole) {
+						guildRoleId = role.ID
+					}
+				}
+
+				isAllowed := false
+				for _,role := range ctx.Event.Member.Roles {
+					if guildRoleId == role {
+						isAllowed = true
+						break
+					}
+				}
+
+				if !isAllowed {
+					ctx.ReplyDm(fmt.Sprintf("You are not permitted to register. You must be a member of the %s role.", allowedRole))
+					return
+				}
+			}
 
 			acctName := ctx.Msg().Author.Username + ctx.Msg().Author.Discriminator
 			password := generatePassword()
