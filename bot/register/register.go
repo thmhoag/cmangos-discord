@@ -2,11 +2,13 @@ package register
 
 import (
 	"fmt"
+	"github.com/bwmarrin/discordgo"
 	"github.com/thmhoag/cmangos-discord/pkg/cmangos"
 	"github.com/thmhoag/cmangos-discord/pkg/dgmux"
 	"log"
 	"math/rand"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -56,7 +58,7 @@ func NewRegisterCmd(ctx Ctx) *dgmux.Command {
 				}
 			}
 
-			acctName := ctx.Msg().Author.Username + ctx.Msg().Author.Discriminator
+			acctName := generateAccountName(ctx.Msg().Author)
 			password := generatePassword()
 
 			resp, err := client.SendExecCmd(&cmangos.ExecCmdRequest{
@@ -97,6 +99,22 @@ func NewRegisterCmd(ctx Ctx) *dgmux.Command {
 	}
 
 	return cmd
+}
+
+func generateAccountName(user *discordgo.User) string {
+	username := user.Username
+	// Make a Regex to say we only want letters and numbers
+	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	username = reg.ReplaceAllString(username, "")
+	if len(username) > 12 {
+		username = username[0:12]
+	}
+
+	return username + user.Discriminator
 }
 
 func generatePassword() string {
