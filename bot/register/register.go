@@ -16,8 +16,7 @@ func NewRegisterCmd(ctx Ctx) *dgmux.Command {
 
 	cmd := &dgmux.Command{
 		Name: 			"register",
-		Description: 	"Registers a new account if non exists for your user",
-		Usage:       	"register",
+		Description: 	"Registers a new account for your discord user",
 		IgnoreCase: true,
 		DmOnly: true,
 		Handler: func(ctx *dgmux.Ctx) {
