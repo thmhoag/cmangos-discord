@@ -13,7 +13,7 @@ import (
 
 func Execute() {
 	// Open a simple Discord session
-	token := os.Getenv("TOKEN")
+	token := os.Getenv("DISCORD_TOKEN")
 	session, err := discordgo.New("Bot " + token)
 	if err != nil {
 		panic(err)

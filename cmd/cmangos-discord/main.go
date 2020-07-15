@@ -9,11 +9,14 @@ import (
 )
 
 func main() {
+
+	log.Println("starting up...")
+
 	defer func() {
 		sc := make(chan os.Signal, 1)
 		signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 		<-sc
-		log.Println("exiting")
+		log.Println("exiting...")
 		os.Exit(0)
 	}()
 
