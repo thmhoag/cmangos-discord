@@ -29,7 +29,7 @@ func NewRegisterCmd(ctx Ctx) *dgmux.Command {
 			allowedRole := os.Getenv("REGISTER_CMD_ROLE")
 			if allowedRole != "" {
 				if ctx.Event.Member == nil || ctx.Event.Member.Roles == nil {
-					ctx.ReplyDm("Unable to register users at this time.")
+					ctx.ReplyDm("Unable to register accounts at this time.")
 					log.Println("Unable to get discord member roles.")
 					return
 				}
@@ -70,7 +70,8 @@ func NewRegisterCmd(ctx Ctx) *dgmux.Command {
 				})
 
 				if err2 != nil {
-					log.Printf("error executing register command: %s\n", err)
+					log.Printf("error executing register command: %s", err)
+					ctx.ReplyDm("Unable to register accounts at this time.")
 				}
 
 				ctx.ReplyDm(fmt.Sprintf("Account has already been registered. Your username is `%s`.", acctName))
@@ -78,7 +79,7 @@ func NewRegisterCmd(ctx Ctx) *dgmux.Command {
 			}
 
 			if resp.Body.Fault != nil {
-				log.Printf("error from cmangos server: %s\n", resp.Body.Fault.Faultstring)
+				log.Printf("error from cmangos server: %s", resp.Body.Fault.Faultstring)
 				ctx.ReplyDm(fmt.Sprintf("error: %s", resp.Body.Fault.Faultstring))
 				return
 			}
