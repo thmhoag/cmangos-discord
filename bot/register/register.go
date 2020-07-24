@@ -23,6 +23,13 @@ func NewRegisterCmd(ctx Ctx) *dgmux.Command {
 		IgnoreCase: 	true,
 		DmOnly: 		true,
 		Handler: 		func(ctx *dgmux.Ctx) {
+			defer func() {
+				event := ctx.Event
+				if event != nil && event.ChannelID != "" && event.ID != "" {
+					_ = ctx.Session.ChannelMessageDelete(event.ChannelID, event.ID)
+				}
+			}()
+
 			if ctx.Event.GuildID == "" {
 				ctx.ReplyDm("You may not register in a DM.")
 				return
