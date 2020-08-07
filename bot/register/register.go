@@ -81,6 +81,7 @@ func NewRegisterCmd(ctx Ctx) *dgmux.Command {
 				if err2 != nil {
 					log.Printf("error executing register command: %s", err)
 					ctx.ReplyDm("Unable to register accounts at this time.")
+					return
 				}
 
 				ctx.ReplyDm(fmt.Sprintf("Account has already been registered. Your username is `%s`.", acctName))
